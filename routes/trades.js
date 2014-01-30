@@ -1,10 +1,9 @@
-// var _ = require('lodash');
 var mongo = require('mongodb');
 var db;
 
 var client = new mongo.MongoClient(new mongo.Server('localhost', 27017));
 client.open(function(err, client) {
-    db = client.db('kripp');
+    db = client.db('gnashblade');
 });
 
 exports.findAll = function(req, res) {
@@ -58,7 +57,7 @@ exports.updateTrade = function(req, res) {
     var id = req.params.id;
     var trade = req.body;
     db.collection('trades', function(err, collection) {
-        collection.update({'_id': new mongo.ObjectID(id)}, trade, {safe: true}, function(err, result) {
+        collection.update({'_id': new mongo.ObjectID(id)}, trade, {safe: true}, function(err) {
             if (err) {
                 res.json({
                     status: 'error',
@@ -74,7 +73,7 @@ exports.updateTrade = function(req, res) {
 exports.deleteTrade = function(req, res) {
     var id = req.params.id;
     db.collection('trades', function(err, collection) {
-        collection.remove({'_id': new mongo.ObjectID(id)}, {safe: true}, function(err, result) {
+        collection.remove({'_id': new mongo.ObjectID(id)}, {safe: true}, function(err) {
             if (err) {
                 res.json({
                     status: 'error',
