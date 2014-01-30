@@ -38,15 +38,6 @@ Named after the Black Lion Trading Company head honcho (and all round nice guy) 
         "archived": false
     }
 
-## Error handling
-
-Errors are returned with a 200 code in the following format:
-
-    {
-        "status": "error",
-        "error": "Verbose error message goes here telling you what went wrong"
-    }
-
 ## Example calls
 
 Replace ids as required.
