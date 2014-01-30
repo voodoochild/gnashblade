@@ -45,13 +45,15 @@ Errors are returned with a 200 code in the following format:
         "error": "Verbose error message goes here telling you what went wrong"
     }
 
-## Examples
+## Example calls
 
-*Add*
-curl -i -X POST -H 'Content-Type: application/json' -d '{"itemid":39527,"activity":[{"action":"ordered","quantity":2,"value":116.5,"total":0},{"action":"bought","quantity":1,"value":116.5,"total":-116.5},{"action":"listed","quantity":1,"value":199.5,"total":-9.98},{"action":"sold","quantity":1,"value":199.5,"total":179.55}],"ordered":2,"bought":1,"listed":1,"sold":1,"balance":53.07,"archived":false}' http://localhost:3000/trades
+Replace ids as required.
 
-*Update*
-curl -i -X PUT -H 'Content-Type: application/json' -d '{"itemid":39527,"activity":[{"action":"ordered","quantity":2,"value":116.5,"total":0},{"action":"bought","quantity":1,"value":116.5,"total":-116.5},{"action":"listed","quantity":1,"value":199.5,"total":-9.98},{"action":"sold","quantity":1,"value":199.5,"total":179.55},{"action":"bought","quantity":1,"value":116.5,"total":-116.5},{"action":"listed","quantity":1,"value":199.5,"total":-9.98},{"action":"sold","quantity":1,"value":199.5,"total":179.55}],"ordered":2,"bought":2,"listed":2,"sold":2,"balance":106.14,"archived":false}' http://localhost:3000/trades/52e98ed133335b0000de67a1
+### Add
+`curl -i -X POST -H 'Content-Type: application/json' -d '{"itemid":39527,"activity":[{"action":"ordered","quantity":2,"value":116.5,"total":0},{"action":"bought","quantity":1,"value":116.5,"total":-116.5},{"action":"listed","quantity":1,"value":199.5,"total":-9.98},{"action":"sold","quantity":1,"value":199.5,"total":179.55}],"ordered":2,"bought":1,"listed":1,"sold":1,"balance":53.07,"archived":false}' http://localhost:3000/trades`
 
-*Remove*
-curl -i -X DELETE http://localhost:3000/trades/52e98dc649441a0000de4136
+### Update
+`curl -i -X PUT -H 'Content-Type: application/json' -d '{"itemid":39527,"activity":[{"action":"ordered","quantity":2,"value":116.5,"total":0},{"action":"bought","quantity":1,"value":116.5,"total":-116.5},{"action":"listed","quantity":1,"value":199.5,"total":-9.98},{"action":"sold","quantity":1,"value":199.5,"total":179.55},{"action":"bought","quantity":1,"value":116.5,"total":-116.5},{"action":"listed","quantity":1,"value":199.5,"total":-9.98},{"action":"sold","quantity":1,"value":199.5,"total":179.55}],"ordered":2,"bought":2,"listed":2,"sold":2,"balance":106.14,"archived":false}' http://localhost:3000/trades/52e98ed133335b0000de67a1`
+
+### Remove
+`curl -i -X DELETE http://localhost:3000/trades/52e98dc649441a0000de4136`
