@@ -1,85 +1,88 @@
+// var _ = require('lodash');
 var mongo = require('mongodb');
+var db;
 
-// var Server = mongo.Server,
-//     Db = mongo.Db,
-//     BSON = mongo.BSONPure;
-
-// var server = new Server('mythlan.co.uk', 27017, {auto_reconnect: true});
-// var db = new Db('gw2db', server);
-
-// db.open(function(err, db) {
-//     if (!err) {
-//         console.log('Connected to the database');
-//         db.collection('trades', {strict: true}, function(err) {
-//             if (err) {
-//                 console.log('Collection does not exist');
-//             }
-//         });
-//     }
-// });
-
-var MongoClient = require('mongodb').MongoClient;
-
-  MongoClient.connect('mongodb://mythlan.co.uk:27017/test', function(err, db) {
-    if(err) throw err;
-
-    var collection = db.collection('test_insert');
-    collection.insert({a:2}, function(err, docs) {
-
-      collection.count(function(err, count) {
-        console.log("count = "+ count);
-      });
-
-      // Locate all the entries using find
-      collection.find().toArray(function(err, results) {
-        console.dir(results);
-        // Let's close the db
-        db.close();
-      });
-    });
-  });
+var client = new mongo.MongoClient(new mongo.Server('localhost', 27017));
+client.open(function(err, client) {
+    db = client.db('kripp');
+});
 
 exports.findAll = function(req, res) {
-    res.send('');
+    db.collection('trades', function(err, collection) {
+        collection.find().toArray(function(err, result) {
+            if (err) {
+                res.json({
+                    status: 'error',
+                    error: 'Unable to retrieve trades'
+                });
+            } else {
+                res.json(result);
+            }
+        });
+    });
 };
 
 exports.findById = function(req, res) {
-    res.send('');
+    var id = req.params.id;
+    db.collection('trades', function(err, collection) {
+        collection.findOne({'_id': new mongo.ObjectID(id)}, function(err, result) {
+            if (err) {
+                res.json({
+                    status: 'error',
+                    error: 'Unable to retrieve trade "'+id+'"'
+                });
+            } else {
+                res.json(result);
+            }
+        });
+    });
 };
 
 exports.addTrade = function(req, res) {
-    res.send('');
+    var trade = req.body;
+    db.collection('trades', function(err, collection) {
+        collection.insert(trade, {safe: true}, function(err, result) {
+            if (err) {
+                res.json({
+                    status: 'error',
+                    error: 'Unable to insert new trade'
+                });
+            } else {
+                res.json(result[0]);
+            }
+        });
+    });
 };
 
 exports.updateTrade = function(req, res) {
-    res.send('');
+    var id = req.params.id;
+    var trade = req.body;
+    db.collection('trades', function(err, collection) {
+        collection.update({'_id': new mongo.ObjectID(id)}, trade, {safe: true}, function(err, result) {
+            if (err) {
+                res.json({
+                    status: 'error',
+                    error: 'Unable to update trade "'+id+'"'
+                });
+            } else {
+                res.json({status: 'done'});
+            }
+        });
+    });
 };
 
-// exports.findAll = function(req, res) {
-//     db.collection('trades', function(err, collection) {
-//         collection.find().toArray(function(err, items) {
-//             res.send(items);
-//         });
-//     });
-// };
-
-// exports.findById = function(req, res) {
-//     res.send({
-//         _id: req.params.id,
-//         itemId: 37723,
-//         created: '1391003697821',
-//         owner: 'kriss', // 'kriss' or 'simon'
-//         log: [
-//             {action: 'ordered', quantity: 10, value: 8.2, created: '1391003697821', total: null},
-//             {action: 'bought', quantity: 8, value: 8.2, created: '1391003697821', total: -65.6},
-//             {action: 'listed', quantity: 8, value: 16.0, created: '1391003697821', total: -6.4},
-//             {action: 'sold', quantity: 4, value: 16.0, created: '1391003697821', total: 57.6}
-//         ],
-//         ordered: 10,
-//         bought: 8,
-//         listed: 4,
-//         sold: 4,
-//         balance: -14.4,
-//         archived: false
-//     });
-// };
+exports.deleteTrade = function(req, res) {
+    var id = req.params.id;
+    db.collection('trades', function(err, collection) {
+        collection.remove({'_id': new mongo.ObjectID(id)}, {safe: true}, function(err, result) {
+            if (err) {
+                res.json({
+                    status: 'error',
+                    error: 'Unable to remove trade "'+id+'"'
+                });
+            } else {
+                res.json({status: 'done'});
+            }
+        });
+    });
+};
